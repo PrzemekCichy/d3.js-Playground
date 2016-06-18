@@ -1,24 +1,38 @@
-var containerHeight = 50;
-var containerWidth = 200;
-var dataValue = Math.random();
-dataValue = Math.floor(dataValue * 100);
-dataValue = [dataValue];
-
-var svg = d3.select("body")
+var margin = { top: 30, right: 20, bottom: 30, left: 50 };
+var containerWidth = 600;
+var containerHeight = 150;
+var height = containerHeight - margin.top - margin.bottom;
+var width = containerWidth - margin.left - margin.right;
+//Changing range values changes scale start and end point
+var xAxisScale = d3.scale.linear().range([0, width]);
+var dataValue = [Math.floor(Math.random() * 530)];
+//dataValue = [430];
+//Make container which holds scale and moving bar
+var svgContainer = d3.select("body")
     .append("svg")
     .attr("width", containerWidth)
-    .attr("height", containerHeight);
-svg.selectAll("rect")
+    .attr("height", containerHeight)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//.attr("style", "outline: thin solid blue;");
+//create rectangle based on passed value dataValue
+svgContainer.selectAll("rect")
     .data(dataValue)
     .enter()
     .append("rect")
     .attr({
-    x: function (d, i) { return i * 10; },
-    y: function (d) { return containerHeight - d; },
-    width: 10,
-    height: function (d) { return d; },
-    fill: function (d, i) { return "rgb(" + i * 20 + ", 0, 0)"; }
+    x: 0,
+    y: 0,
+    width: function (d, i) { return d; },
+    height: height,
+    fill: function (d, i) { return "rgb(" + 0 + ", 10, 100)"; }
 });
+var xAxis = d3.svg.axis().scale(xAxisScale)
+    .orient("bottom").ticks(10);
+svgContainer.append("g") // Add the X Axis
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 /*
 svg.selectAll("text")
     .data(dataset)
